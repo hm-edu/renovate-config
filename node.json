@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Node/TypeScript projects (pnpm, yarn, npm)",
+  "extends": ["github>hm-edu/renovate-config"],
+  "packageRules": [
+    {
+      "description": "Group type packages and lint/test tooling, automerge minor/patch",
+      "matchPackageNames": [
+        "/^@types\\//",
+        "/^eslint/",
+        "/^@eslint\\//",
+        "/^typescript-eslint/",
+        "prettier",
+        "/^@typescript-eslint\\//",
+        "vitest",
+        "/^@vitest\\//"
+      ],
+      "groupName": "lint, types and test tooling",
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ]
+}

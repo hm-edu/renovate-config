@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Repos whose main artefact is a Dockerfile (synapse-s3, ezproxy-docker, limesurvey-oauth, ansible-ci, k8s-ci-helper, ...)",
+  "extends": ["github>hm-edu/renovate-config"],
+  "packageRules": [
+    {
+      "description": "pip requirements inside images: automerge minor/patch",
+      "matchManagers": ["pip_requirements"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ]
+}

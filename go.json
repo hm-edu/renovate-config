@@ -1,0 +1,20 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Go projects",
+  "extends": ["github>hm-edu/renovate-config"],
+  "postUpdateOptions": ["gomodTidy", "gomodUpdateImportPaths"],
+  "packageRules": [
+    {
+      "description": "golang.org/x/* and google.golang.org/* pseudo-versions: group and automerge",
+      "matchPackageNames": ["/^golang\\.org\\/x\\//", "/^google\\.golang\\.org\\//"],
+      "groupName": "golang.org/x and google.golang.org",
+      "automerge": true
+    },
+    {
+      "description": "Go toolchain in go.mod / Dockerfile: automerge minor/patch",
+      "matchDepNames": ["go", "golang"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ]
+}

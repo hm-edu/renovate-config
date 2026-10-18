@@ -1,0 +1,43 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Flux/Kubernetes GitOps repos (hm-edu/infrastructure, zit/k8s, zit/k8s-at-gwdg)",
+  "extends": ["github>hm-edu/renovate-config"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "datasource=... depName=... annotations in YAML",
+      "managerFilePatterns": ["/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?\\n.*?\"(?<currentValue>.*)\"\\n"
+      ],
+      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    }
+  ],
+  "flux": { "managerFilePatterns": ["/.+\\.ya?ml$/"] },
+  "helm-values": { "managerFilePatterns": ["/.+\\.ya?ml$/"] },
+  "kubernetes": { "managerFilePatterns": ["/.+\\.ya?ml$/"] },
+  "packageRules": [
+    {
+      "description": "Flux controllers are upgraded via the flux CLI, not Renovate",
+      "matchPackageNames": ["/^ghcr\\.io\\/fluxcd\\//"],
+      "enabled": false
+    },
+    {
+      "matchDatasources": ["helm"],
+      "separateMinorPatch": true,
+      "ignoreDeprecated": true
+    },
+    {
+      "description": "Helm patch releases: automerge (CI must validate the kustomization)",
+      "matchDatasources": ["helm"],
+      "matchUpdateTypes": ["patch"],
+      "automerge": true
+    },
+    {
+      "matchDatasources": ["docker", "helm"],
+      "matchUpdateTypes": ["major"],
+      "labels": ["dependencies", "major"]
+    }
+  ]
+}

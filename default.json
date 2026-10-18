@@ -1,0 +1,104 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "hm-edu shared Renovate defaults: minor/patch/digest automerged once releases are stable, majors always need a human, security updates handled immediately.",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":dependencyDashboard",
+    ":rebaseStalePrs",
+    "helpers:pinGitHubActionDigests",
+    "docker:pinDigests",
+    ":automergeDigest",
+    ":automergeMinor",
+    "group:monorepos",
+    "group:recommended"
+  ],
+  "timezone": "Europe/Berlin",
+  "labels": ["dependencies"],
+  "prConcurrentLimit": 0,
+  "prHourlyLimit": 0,
+  "automergeType": "pr",
+  "platformAutomerge": true,
+  "automergeStrategy": "squash",
+  "rebaseWhen": "behind-base-branch",
+  "minimumReleaseAge": "1 day",
+  "internalChecksFilter": "strict",
+  "dependencyDashboardAutoclose": true,
+  "osvVulnerabilityAlerts": true,
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["dependencies", "security"],
+    "minimumReleaseAge": null,
+    "schedule": ["at any time"],
+    "automerge": true,
+    "prPriority": 10,
+    "commitMessagePrefix": "fix(security):"
+  },
+  "packageRules": [
+    {
+      "description": "Majors are never automerged, anywhere",
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "major"]
+    },
+    {
+      "description": "All container images (base, tooling, internal, app): gatekeep 1 day, then automerge minor/patch/digest",
+      "matchDatasources": ["docker"],
+      "minimumReleaseAge": "1 day",
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "automerge": true
+    },
+    {
+      "description": "Internal hm-edu Go modules: automerge minor/patch/digest",
+      "matchPackageNames": ["/^github\\.com\\/hm-edu\\//"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "automerge": true
+    },
+    {
+      "description": "npm/pnpm/yarn: stable after 1 day, then automerge minor/patch/digest",
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "1 day"
+    },
+    {
+      "description": "Go modules: stable after 1 day",
+      "matchDatasources": ["go"],
+      "minimumReleaseAge": "1 day"
+    },
+    {
+      "description": "PyPI: stable after 1 day",
+      "matchDatasources": ["pypi"],
+      "minimumReleaseAge": "1 day"
+    },
+    {
+      "description": "GitHub Action digests/pins carry no API risk: no waiting period",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["digest", "pin", "pinDigest"],
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "GitHub Actions: automerge minor/patch/digest",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch", "digest", "pin", "pinDigest"],
+      "automerge": true
+    },
+    {
+      "description": "Database majors: hint about migration steps (never automerged like all majors)",
+      "matchPackageNames": ["/postgres/", "/mariadb/", "/mysql/", "/mongo/"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "prBodyNotes": [
+        ":warning: Major database upgrade. Check the data-directory/migration steps (e.g. pg_upgrade, mariadb-upgrade) before merging; the container will not start on the old data directory."
+      ]
+    },
+    {
+      "description": "Lock file maintenance weekly, automerged",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "automerge": true
+    }
+  ],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on monday"],
+    "automerge": true
+  }
+}
