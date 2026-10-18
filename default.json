@@ -42,6 +42,12 @@
       "labels": ["dependencies", "major"]
     },
     {
+      "description": "Pinning the version/digest already in use changes nothing at runtime: automerge, no waiting period (any datasource)",
+      "matchUpdateTypes": ["pin", "pinDigest"],
+      "minimumReleaseAge": null,
+      "automerge": true
+    },
+    {
       "description": "All container images (base, tooling, internal, app): gatekeep 1 day, then automerge minor/patch/digest",
       "matchDatasources": ["docker"],
       "minimumReleaseAge": "1 day",
