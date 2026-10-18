@@ -23,7 +23,7 @@
   "rebaseWhen": "behind-base-branch",
   "minimumReleaseAge": "1 day",
   "internalChecksFilter": "strict",
-  "dependencyDashboardAutoclose": true,
+  "dependencyDashboardAutoclose": false,
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
     "enabled": true,
