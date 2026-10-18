@@ -26,11 +26,11 @@
   "dependencyDashboardAutoclose": false,
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
+    "description": "Security PRs skip the stability window and get top priority. automerge is deliberately NOT set here: this block is applied after packageRules and would override the no-major rule. Minor/patch security fixes still automerge through the normal rules.",
     "enabled": true,
     "labels": ["dependencies", "security"],
     "minimumReleaseAge": null,
     "schedule": ["at any time"],
-    "automerge": true,
     "prPriority": 10,
     "commitMessagePrefix": "fix(security):"
   },
@@ -69,6 +69,17 @@
       "description": "Go modules: stable after 1 day",
       "matchDatasources": ["go"],
       "minimumReleaseAge": "1 day"
+    },
+    {
+      "description": "Go: a major of an INDIRECT dependency changes the module path and cannot be fixed in this repo's go.mod; it must move upstream in the module that requires it",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["indirect"],
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "addLabels": ["needs-upstream"],
+      "prBodyNotes": [
+        ":no_entry: This is an **indirect** Go dependency crossing a major (new module path). Changing `go.mod` here is a no-op: `go mod tidy` will restore the old major as long as a direct dependency requires it. Run `go mod why -m <module>` to find the dependent that needs to upgrade, fix it there, then close this PR."
+      ]
     },
     {
       "description": "PyPI: stable after 1 day",
