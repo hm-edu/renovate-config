@@ -1,0 +1,15 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Projects on git.it.hm.edu (self-hosted runner zit/renovate). Adds the GitLab-specific bits on top of default: bot identity, assignee on majors, merge-when-pipeline-succeeds.",
+  "extends": ["github>hm-edu/renovate-config"],
+  "gitAuthor": "SRE Renovate Bot <sre-team-it+git@hm.edu>",
+  "automergeType": "pr",
+  "platformAutomerge": true,
+  "packageRules": [
+    {
+      "description": "Majors need a human: assign them so they show up in the to-do list; automerged MRs stay unassigned",
+      "matchUpdateTypes": ["major"],
+      "assignees": ["fritterh"]
+    }
+  ]
+}
