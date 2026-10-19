@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Ansible deployment repos (playbooks + roles, ghcr.io/hm-edu/ansible-ci image, tailscale sidecar, git.it.hm.edu/zit/ansible-collection). Images are covered by default.",
+  "extends": ["github>hm-edu/renovate-config"],
+  "packageRules": [
+    {
+      "description": "HM ansible collection (git tag in requirements.yml): minor/patch automerge, majors manual",
+      "matchDepNames": ["git.it.hm.edu/zit/ansible-collection", "https://git.it.hm.edu/zit/ansible-collection.git"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "description": "Galaxy collections and roles: minor/patch automerge after the 1-day gate",
+      "matchManagers": ["ansible-galaxy"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ]
+}

@@ -4,5 +4,6 @@
   "extends": ["github>hm-edu/renovate-config"],
   "gitAuthor": "SRE Renovate Bot <sre-team-it+git@hm.edu>",
   "automergeType": "pr",
-  "platformAutomerge": true
+  "platformAutomerge": true,
+  "gitLabIgnoreApprovals": true
 }
