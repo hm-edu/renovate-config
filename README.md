@@ -6,15 +6,17 @@ Usage in a repo's `renovate.json`:
 
     { "extends": ["github>hm-edu/renovate-config:node"] }
 
-Presets: `default` (always), `node`, `go`, `container`, `flux`.
+Presets: `default` (always), `gitlab` (git.it.hm.edu projects), `node`, `go`,
+`container`, `flux`, `ansible`.
 
 Policy:
-- minor/patch/digest updates are automerged once the release is older than the
-  stability window of 1 day (npm, Go, PyPI, all container images incl.
-  digests; GitHub Action digests immediately).
+- minor/patch/digest updates are automerged as soon as the repo's CI is green.
+  There is no stability window: CI is the gate, not release age.
 - Major updates are never automerged; they get the `major` label and wait for a
   human; database majors carry a migration hint in the PR body.
-- Security updates (GitHub/OSV vulnerability alerts) skip the stability window,
-  are labelled `security` and automerged with top priority.
+- Security updates (GitHub/OSV vulnerability alerts) are labelled `security`
+  and get top priority; minor/patch ones automerge like any other.
 - Automerge only works when the repo has branch protection with a required
-  status check and "Allow auto-merge" enabled; otherwise Renovate waits forever.
+  status check and "Allow auto-merge" enabled (GitHub) or MR pipelines that
+  actually run tests (GitLab); otherwise Renovate waits forever - or merges
+  untested.

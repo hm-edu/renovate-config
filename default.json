@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "hm-edu shared Renovate defaults: minor/patch/digest automerged once releases are stable, majors always need a human, security updates handled immediately.",
+  "description": "hm-edu shared Renovate defaults: minor/patch/digest automerged as soon as CI is green, majors always need a human, security updates prioritised. No stability window.",
   "extends": [
     "config:recommended",
     ":semanticCommits",
@@ -21,15 +21,13 @@
   "platformAutomerge": true,
   "automergeStrategy": "squash",
   "rebaseWhen": "behind-base-branch",
-  "minimumReleaseAge": "1 day",
-  "internalChecksFilter": "strict",
+  "minimumReleaseAge": null,
   "dependencyDashboardAutoclose": false,
   "osvVulnerabilityAlerts": true,
   "vulnerabilityAlerts": {
-    "description": "Security PRs skip the stability window and get top priority. automerge is deliberately NOT set here: this block is applied after packageRules and would override the no-major rule. Minor/patch security fixes still automerge through the normal rules.",
+    "description": "Security PRs get top priority and run at any time. automerge is deliberately NOT set here: this block is applied after packageRules and would override the no-major rule. Minor/patch security fixes still automerge through the normal rules.",
     "enabled": true,
     "labels": ["dependencies", "security"],
-    "minimumReleaseAge": null,
     "schedule": ["at any time"],
     "prPriority": 10,
     "commitMessagePrefix": "fix(security):"
@@ -42,15 +40,13 @@
       "labels": ["dependencies", "major"]
     },
     {
-      "description": "Pinning the version/digest already in use changes nothing at runtime: automerge, no waiting period (any datasource)",
+      "description": "Pinning the version/digest already in use changes nothing at runtime: automerge (any datasource)",
       "matchUpdateTypes": ["pin", "pinDigest"],
-      "minimumReleaseAge": null,
       "automerge": true
     },
     {
-      "description": "All container images (base, tooling, internal, app): gatekeep 1 day, then automerge minor/patch/digest",
+      "description": "All container images (base, tooling, internal, app): automerge minor/patch/digest",
       "matchDatasources": ["docker"],
-      "minimumReleaseAge": "1 day",
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true
     },
@@ -59,16 +55,6 @@
       "matchPackageNames": ["/^github\\.com\\/hm-edu\\//"],
       "matchUpdateTypes": ["minor", "patch", "digest"],
       "automerge": true
-    },
-    {
-      "description": "npm/pnpm/yarn: stable after 1 day, then automerge minor/patch/digest",
-      "matchDatasources": ["npm"],
-      "minimumReleaseAge": "1 day"
-    },
-    {
-      "description": "Go modules: stable after 1 day",
-      "matchDatasources": ["go"],
-      "minimumReleaseAge": "1 day"
     },
     {
       "description": "Go: a major of an INDIRECT dependency changes the module path and cannot be fixed in this repo's go.mod; it must move upstream in the module that requires it",
@@ -80,17 +66,6 @@
       "prBodyNotes": [
         ":no_entry: This is an **indirect** Go dependency crossing a major (new module path). Changing `go.mod` here is a no-op: `go mod tidy` will restore the old major as long as a direct dependency requires it. Run `go mod why -m <module>` to find the dependent that needs to upgrade, fix it there, then close this PR."
       ]
-    },
-    {
-      "description": "PyPI: stable after 1 day",
-      "matchDatasources": ["pypi"],
-      "minimumReleaseAge": "1 day"
-    },
-    {
-      "description": "GitHub Action digests/pins carry no API risk: no waiting period",
-      "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["digest", "pin", "pinDigest"],
-      "minimumReleaseAge": null
     },
     {
       "description": "GitHub Actions: automerge minor/patch/digest",
